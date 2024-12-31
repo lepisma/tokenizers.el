@@ -1,0 +1,6 @@
+#+TITLE: tokenizers.el
+
+Fast tokenizers for Emacs Lisp backed by [[https://github.com/huggingface/tokenizers][Huggingface's rust library]].
+
+To start with this will support inference from pretrained models since that's
+what needed in [[https://github.com/lepisma/onnx.el][onnx.el]].
