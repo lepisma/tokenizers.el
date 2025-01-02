@@ -2,5 +2,23 @@
 
 Fast tokenizers for Emacs Lisp backed by [[https://github.com/huggingface/tokenizers][Huggingface's rust library]].
 
-To start with this will support inference from pretrained models since that's
+To start with, this will support inference from pretrained models since that's
 what needed in [[https://github.com/lepisma/onnx.el][onnx.el]].
+
+* Installation
+Installation is manual right now. You will need cargo installed and run ~make~ to
+build the module's ~.so~ file (interpret and change the makefile for non-linux
+platform).
+
+* Usage
+#+begin_src emacs-lisp
+  (require 'tokenizers)
+  (setq tk (tokenizers-from-pretrained "sentence-transformers/all-MiniLM-L6-v2"))
+
+  ;; Returns a list of three vectors, token-ids, type-ids, and attention-mask
+  (tokenizers-encode tk "Test sentence with some words")
+
+  ;; Returns a list of three 2d vectors (batch size is the first dimension),
+  ;; token-ids, type-ids, and attention-mask
+  (tokenizers-encode-batch tk ["This is an example sentence" "Each sentence is converted"])
+#+end_src
