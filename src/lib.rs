@@ -6,7 +6,7 @@ emacs::plugin_is_GPL_compatible!();
 
 #[emacs::module(name = "tokenizers")]
 fn init(env: &Env) -> Result<Value<'_>> {
-    env.message("Done Loading!")
+    env.message("Loaded tokenizers!")
 }
 
 #[defun(user_ptr)]
@@ -15,7 +15,7 @@ fn from_pretrained(string: String) -> Result<Tokenizer> {
 
     match tk_res {
         Ok(tk) => Ok(tk),
-        Err(_error) => panic!("hehe"),
+        Err(_error) => panic!("Error in loading tokenizer from pretrained"),
     }
 }
 
@@ -51,14 +51,61 @@ fn encode<'a>(env: &'a Env, tok: &mut Tokenizer, string: String) -> Result<Value
             let output_list = env.list((token_ids, type_ids, attention_mask))?;
             Ok(output_list)
         },
-        Err(_error) => panic!("hehe"),
+        Err(_error) => panic!("Error in encoding"),
     }
 }
 
 // Encode given vector of strings like in `encode` and return a
 // list of batched token_ids, type_ids, and attention_mask
 #[defun]
-fn encode_batch<'a>(env: &'a Env, tok: &mut Tokenizer, strings: Vector) -> Result<()> {
-    // TODO
-    Ok(())
+fn encode_batch<'a>(env: &'a Env, tok: &mut Tokenizer, strings: Vector) -> Result<Value<'a>> {
+    // Emacs vector to rust vector
+    let n_strings: usize = env.call("length", (strings,))?.into_rust()?;
+    let mut strings_v = vec![String::new(); n_strings];
+
+    for i in 0..n_strings {
+        strings_v[i] = env.call("aref", (strings, i))?.into_rust()?;
+    }
+
+    let enc_res = match tok.encode_batch(strings_v, false) {
+        Ok(res) => res,
+        Err(_error) => panic!("Error in batch encoding"),
+    };
+
+    let mut token_ids_2d: Vec<Value> = Vec::with_capacity(n_strings);
+    let mut type_ids_2d: Vec<Value> = Vec::with_capacity(n_strings);
+    let mut attention_mask_2d: Vec<Value> = Vec::with_capacity(n_strings);
+
+    for enc in &enc_res {
+        let token_ids = env.vector(
+            &enc.get_ids()
+                .iter()
+                .map(|&id| id.into_lisp(env))
+                .collect::<Result<Vec<_>>>()?
+        )?;
+
+        let type_ids = env.vector(
+            &enc.get_type_ids()
+                .iter()
+                .map(|&id| id.into_lisp(env))
+                .collect::<Result<Vec<_>>>()?
+        )?;
+
+        let attention_mask = env.vector(
+            &enc.get_attention_mask()
+                .iter()
+                .map(|&id| id.into_lisp(env))
+                .collect::<Result<Vec<_>>>()?
+        )?;
+
+        token_ids_2d.push(token_ids);
+        type_ids_2d.push(type_ids);
+        attention_mask_2d.push(attention_mask);
+    }
+
+    let output_list = env.list((env.vector(&token_ids_2d)?,
+                                env.vector(&type_ids_2d)?,
+                                env.vector(&attention_mask_2d)?))?;
+
+    Ok(output_list)
 }
