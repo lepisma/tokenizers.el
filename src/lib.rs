@@ -23,7 +23,7 @@ fn from_pretrained(string: String) -> Result<Tokenizer> {
 // token_ids, type_ids, and attention_mask
 #[defun]
 fn encode<'a>(env: &'a Env, tok: &mut Tokenizer, string: String) -> Result<Value<'a>> {
-    let enc_res = tok.encode(string, false);
+    let enc_res = tok.encode(string, true);
 
     match enc_res {
         Ok(enc) => {
@@ -67,7 +67,7 @@ fn encode_batch<'a>(env: &'a Env, tok: &mut Tokenizer, strings: Vector) -> Resul
         strings_v[i] = env.call("aref", (strings, i))?.into_rust()?;
     }
 
-    let enc_res = match tok.encode_batch(strings_v, false) {
+    let enc_res = match tok.encode_batch(strings_v, true) {
         Ok(res) => res,
         Err(_error) => panic!("Error in batch encoding"),
     };
