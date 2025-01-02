@@ -6,5 +6,5 @@
 
   (setq tk (tokenizers-from-pretrained "sentence-transformers/all-MiniLM-L6-v2")))
 
-(tokenizers-encode tk "Test sentence with some words")
-(tokenizers-encode-batch tk ["This is an example sentence" "Each sentence is converted"])
+(tokenizers-encode tk "Test sentence with some words" t)
+(tokenizers-encode-batch tk ["This is an example sentence" "Each sentence is converted"] t)

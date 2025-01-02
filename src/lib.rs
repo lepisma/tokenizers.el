@@ -22,8 +22,8 @@ fn from_pretrained(string: String) -> Result<Tokenizer> {
 // Encode the given string using tokenizer tok and return
 // token_ids, type_ids, and attention_mask
 #[defun]
-fn encode<'a>(env: &'a Env, tok: &mut Tokenizer, string: String) -> Result<Value<'a>> {
-    let enc_res = tok.encode(string, true);
+fn encode<'a>(env: &'a Env, tok: &mut Tokenizer, string: String, add_special_tokens: Value) -> Result<Value<'a>> {
+    let enc_res = tok.encode(string, add_special_tokens.eq(env.intern("t")?));
 
     match enc_res {
         Ok(enc) => {
@@ -58,7 +58,7 @@ fn encode<'a>(env: &'a Env, tok: &mut Tokenizer, string: String) -> Result<Value
 // Encode given vector of strings like in `encode` and return a
 // list of batched token_ids, type_ids, and attention_mask
 #[defun]
-fn encode_batch<'a>(env: &'a Env, tok: &mut Tokenizer, strings: Vector) -> Result<Value<'a>> {
+fn encode_batch<'a>(env: &'a Env, tok: &mut Tokenizer, strings: Vector, add_special_tokens: Value) -> Result<Value<'a>> {
     // Emacs vector to rust vector
     let n_strings: usize = env.call("length", (strings,))?.into_rust()?;
     let mut strings_v = vec![String::new(); n_strings];
@@ -67,7 +67,7 @@ fn encode_batch<'a>(env: &'a Env, tok: &mut Tokenizer, strings: Vector) -> Resul
         strings_v[i] = env.call("aref", (strings, i))?.into_rust()?;
     }
 
-    let enc_res = match tok.encode_batch(strings_v, true) {
+    let enc_res = match tok.encode_batch(strings_v, add_special_tokens.eq(env.intern("t")?)) {
         Ok(res) => res,
         Err(_error) => panic!("Error in batch encoding"),
     };

@@ -16,9 +16,10 @@ platform).
   (setq tk (tokenizers-from-pretrained "sentence-transformers/all-MiniLM-L6-v2"))
 
   ;; Returns a list of three vectors, token-ids, type-ids, and attention-mask
-  (tokenizers-encode tk "Test sentence with some words")
+  ;; Last argument tells whether to add special tokens or not
+  (tokenizers-encode tk "Test sentence with some words" t)
 
   ;; Returns a list of three 2d vectors (batch size is the first dimension),
   ;; token-ids, type-ids, and attention-mask
-  (tokenizers-encode-batch tk ["This is an example sentence" "Each sentence is converted"])
+  (tokenizers-encode-batch tk ["This is an example sentence" "Each sentence is converted"] t)
 #+end_src
