@@ -23,8 +23,7 @@ fn from_pretrained(string: String) -> Result<Tokenizer> {
 #[defun]
 fn enable_padding(tok: &mut Tokenizer, pad_id: u32, pad_token: String) -> Result<()> {
     tok.with_padding(Some(tokenizers::PaddingParams {
-        pad_id: pad_id,
-        pad_token: pad_token,
+        pad_id, pad_token,
         ..tokenizers::PaddingParams::default()
     }));
 
