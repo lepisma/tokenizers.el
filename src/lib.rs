@@ -71,7 +71,7 @@ fn encode<'a>(env: &'a Env, tok: &mut Tokenizer, string: String, add_special_tok
 #[defun]
 fn encode_batch<'a>(env: &'a Env, tok: &mut Tokenizer, strings: Vector, add_special_tokens: Value) -> Result<Value<'a>> {
     // Emacs vector to rust vector
-    let n_strings: usize = env.call("length", (strings,))?.into_rust()?;
+    let n_strings: usize = strings.len();
     let mut strings_v = vec![String::new(); n_strings];
 
     for i in 0..n_strings {
