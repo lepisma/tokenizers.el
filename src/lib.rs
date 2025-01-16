@@ -4,7 +4,7 @@ use anyhow::Result;
 
 emacs::plugin_is_GPL_compatible!();
 
-#[emacs::module(name = "tokenizers")]
+#[emacs::module(name = "tokenizers-core")]
 fn init(env: &Env) -> Result<Value<'_>> {
     env.message("Loaded tokenizers!")
 }

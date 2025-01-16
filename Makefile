@@ -1,7 +1,7 @@
-all: tokenizers.so
+release: tokenizers-core.so
 
-tokenizers.so: ./target/debug/libtokenizers_el.so
-	cp ./target/debug/libtokenizers_el.so tokenizers.so
+tokenizers-core.so: ./target/release/libtokenizers_el.so
+	cp ./target/release/libtokenizers_el.so tokenizers-core.so
 
-./target/debug/libtokenizers_el.so: ./src/lib.rs
-	cargo build
+./target/release/libtokenizers_el.so: ./src/lib.rs
+	cargo build --release
