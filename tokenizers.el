@@ -3,7 +3,7 @@
 ;; Copyright (c) 2025 Abhinav Tushar
 
 ;; Author: Abhinav Tushar <abhinav@lepisma.xyz>
-;; Version: 0.0.1
+;; Version: 0.1.2
 ;; Package-Requires: ((emacs "29"))
 ;; Keywords: tools, nlp, ml
 ;; URL: https://github.com/lepisma/tokenizers.el
