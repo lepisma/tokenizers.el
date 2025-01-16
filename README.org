@@ -6,9 +6,18 @@ To start with, this will support inference from pretrained models since that's
 what needed in [[https://github.com/lepisma/onnx.el][onnx.el]].
 
 * Installation
-Installation is manual right now. You will need cargo installed and run ~make~ to
-build the module's ~.so~ file (interpret and change the makefile for non-linux
-platform).
+There is a dynamic module that needs you to have cargo installed. This module is
+automatically compiled when you install the package using something like this:
+
+#+begin_src emacs-lisp
+(use-package tokenizers
+  :vc (:fetcher github :repo lepisma/tokenizers.el)
+  :demand t)
+#+end_src
+
+Note that this method only handles creating ~.so~ files which means it won't work
+on non-Linux systems yet. For other systems, manually inspect the ~Makefile~ and
+compile the module yourself.
 
 * Usage
 #+begin_src emacs-lisp
